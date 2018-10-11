@@ -4,7 +4,6 @@ module Mailman
     # and {Matcher.valid_pattern?}. Override {#compile!} if a pattern compiler is
     # needed.
     class Matcher
-
       # @return the matcher pattern, normally stored as a +Regexp+.
       attr_reader :pattern
 
@@ -19,17 +18,15 @@ module Mailman
       # @param [String] string the string to match against
       # @return [(Hash, Array)] a hash to merge into params, and an array of
       #  arguments for the block.
-      def match(string)
+      def match(_string)
         raise NotImplementedError
       end
 
       # @abstract Compiles the pattern into something easier to work with, usually a
       #   +Regexp+.
-      def compile!
-      end
+      def compile!; end
 
       class << self
-
         # @return [<Class>] The array of registered matchers.
         attr_reader :matchers
 
@@ -51,12 +48,10 @@ module Mailman
         # @abstract Checks whether a pattern is valid.
         # @param pattern the pattern to check
         # @return [true, false]
-        def valid_pattern?(pattern)
+        def valid_pattern?(_pattern)
           raise NotImplementedError
         end
-
       end
-
     end
   end
 end

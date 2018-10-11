@@ -3,7 +3,7 @@
 require 'mailman/cli'
 require 'optparse'
 
-$:.<< '.'
+$LOAD_PATH.<< '.'
 
 options = {}
 
@@ -17,7 +17,7 @@ end
 
 begin
   Mailman::CLI.new(options).run
-rescue => e
+rescue StandardError => e
   STDERR.puts e
   STDERR.puts e.backtrace.join("\n")
 

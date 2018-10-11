@@ -24,7 +24,7 @@ module Mailman
       if @config_file
         require @config_file
       else
-        raise ConfigNotDefined.new
+        raise ConfigNotDefined
       end
     end
 

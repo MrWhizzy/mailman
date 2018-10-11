@@ -3,7 +3,6 @@ module Mailman
     # The base condition class. All conditions should subclass and override
     # {#match}.
     class Condition
-
       # @return the matcher to match against.
       attr_reader :matcher
 
@@ -18,7 +17,7 @@ module Mailman
       # @param message [Mail::Message] The message to match against
       # @return [(Hash, Array)] a hash to merge into params, and an array of
       #   block arguments.
-      def match(message)
+      def match(_message)
         raise NotImplementedError
       end
 
@@ -46,7 +45,6 @@ module Mailman
           end
         EOM
       end
-
     end
   end
 end

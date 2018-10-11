@@ -11,9 +11,7 @@ class MockPopMail
     @rfc2822
   end
 
-  def number
-    @number
-  end
+  attr_reader :number
 
   def to_s
     "#{number}: #{pop}"
@@ -34,7 +32,7 @@ class MockPOP3
   def initialize
     @@popmails = []
     2.times do |i|
-      @@popmails << MockPopMail.new("To: test@example.com\r\nFrom: chunky@bacon.com\r\nSubject: Hello!\r\n\r\nemail message\r\ntest#{i.to_s}", i)
+      @@popmails << MockPopMail.new("To: test@example.com\r\nFrom: chunky@bacon.com\r\nSubject: Hello!\r\n\r\nemail message\r\ntest#{i}", i)
     end
   end
 
@@ -42,22 +40,22 @@ class MockPOP3
     @@popmails.clone
   end
 
-  def each_mail(*args)
+  def each_mail(*_args)
     @@popmails.each do |popmail|
       yield popmail
     end
   end
 
-  def mails(*args)
+  def mails(*_args)
     @@popmails.clone
   end
 
-  def start(*args)
+  def start(*_args)
     @@start = true
     block_given? ? yield(self) : self
   end
 
-  def enable_ssl(*args)
+  def enable_ssl(*_args)
     true
   end
 
@@ -69,8 +67,7 @@ class MockPOP3
     @@start == true
   end
 
-  def reset
-  end
+  def reset; end
 
   def finish
     @@start = false
@@ -97,7 +94,7 @@ end
 
 require 'net/pop'
 class Net::POP3
-  def self.new(*args)
+  def self.new(*_args)
     MockPOP3.new
   end
 end
