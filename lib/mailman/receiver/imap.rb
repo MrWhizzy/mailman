@@ -24,19 +24,25 @@ module Mailman
       #   have been processed
       # @option options [String] :filter the search filter to use to select
       #   messages to process
+      # @option options [Boolean] :idle if true, IMAP IDLE will be used
+      # @option options [Integer] :idle_timeout the maximum timeout before
+      #   returning from IDLE.
+      # @option options [Boolean] :persistent if true, unlimited reconnect attempts 
+      #   will be made to the server, if the connection drops for any reason.
       def initialize(options)
-        @processor  = options[:processor]
-        @server     = options[:server]
-        @username   = options[:username]
-        @password   = options[:password]
-        @filter     = options[:filter] || 'UNSEEN'
-        @done_flags = options[:done_flags] || [Net::IMAP::SEEN]
-        @ssl        = options[:ssl] || false
-        @starttls   = options[:starttls] || false
-        @port       = options[:port] || (@ssl ? 993 : 143)
-        @folder     = options[:folder] || 'INBOX'
-        @idle       = options[:idle] || false
-        @persistent = options[:persistent] || false
+        @processor    = options[:processor]
+        @server       = options[:server]
+        @port         = options[:port] || (@ssl ? 993 : 143)
+        @ssl          = options[:ssl] || false
+        @starttls     = options[:starttls] || false
+        @username     = options[:username]
+        @password     = options[:password]
+        @folder       = options[:folder] || 'INBOX'
+        @done_flags   = options[:done_flags] || [Net::IMAP::SEEN]
+        @filter       = options[:filter] || 'UNSEEN'
+        @idle         = options[:idle] || false
+        @idle_timeout = options[:idle_timeout] || 60
+        @persistent   = options[:persistent] || false
 
         if @starttls && @ssl
           raise StandardError, 'either specify ssl or starttls, not both'
@@ -91,7 +97,7 @@ module Mailman
       end
 
       def idle
-        @connection.idle(60) do |resp|
+        @connection.idle(@idle_timeout) do |resp|
           # You'll get all the things from the server. For new emails (EXISTS)
           if resp.is_a?(Net::IMAP::UntaggedResponse) && (resp.name == 'EXISTS')
 

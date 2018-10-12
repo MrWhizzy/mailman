@@ -175,9 +175,8 @@ module Mailman
           connection.idle
           connection.get_messages
         rescue SignalException => e
-          puts 'Signal Received'
-          connection.idle_done
-          connection.disconnect
+          puts '- Signal received, exiting.'
+          break
         rescue Exception => e
           puts "Something went wrong: #{e}"
 
