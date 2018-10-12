@@ -1,4 +1,5 @@
-$LOAD_PATH.unshift File.expand_path('lib', __dir__)
+# coding:utf-8
+$:.unshift File.expand_path("../lib", __FILE__)
 
 require 'rubygems'
 require 'rubygems/specification'
