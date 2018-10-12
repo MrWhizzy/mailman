@@ -226,6 +226,7 @@ For example, when you have a self-signed certificate: `ssl: { ca_file: '/etc/pki
 ### IMAP
 
 The IMAP receiver is enabled when the `Mailman.config.imap` hash is set.
+It is possible to use IDLE instead of polling, by `Mailman.config.idle` to true. By default, the IDLE timeout is set to 60, unless a different value has been specified in `Mailman.config.idle_timeout`.
 Polling can be set with `Mailman.config.poll_interval`. This will read all unread messages in the INBOX by default.
 Here are example settings for gmail.
 
@@ -237,7 +238,9 @@ Mailman.config.imap = {
   # Use starttls instead of ssl (do not specify both)
   #starttls: true,
   username: 'foo@somedomain.com',
-  password: 'totallyunsecuredpassword'
+  password: 'totallyunsecuredpassword',
+  idle: true,
+  idle_timeout: 30
 }
 
 ```
