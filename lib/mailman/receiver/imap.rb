@@ -35,6 +35,8 @@ module Mailman
         @starttls   = options[:starttls] || false
         @port       = options[:port] || (@ssl ? 993 : 143)
         @folder     = options[:folder] || 'INBOX'
+        @idle       = options[:idle] || false
+        @persistent = options[:persistent] || false
 
         if @starttls && @ssl
           raise StandardError, 'either specify ssl or starttls, not both'
@@ -50,8 +52,9 @@ module Mailman
           @connection.login(@username, @password)
         end
         @connection.select(@folder)
-      rescue Net::IMAP::ByeResponseError, Net::IMAP::NoResponseError => e
-        retry unless (tries -= 1).zero?
+      rescue Net::IMAP::ByeResponseError, Net::IMAP::NoResponseError, SocketError
+        sleep 5
+        retry unless (tries -= 1).zero? && !@persistent
       end
 
       # Disconnects from the IMAP server.
@@ -89,11 +92,9 @@ module Mailman
 
       def idle
         @connection.idle(60) do |resp|
-
           # You'll get all the things from the server. For new emails (EXISTS)
-          if resp.kind_of?(Net::IMAP::UntaggedResponse) and resp.name == "EXISTS"
+          if resp.is_a?(Net::IMAP::UntaggedResponse) && (resp.name == 'EXISTS')
 
-            puts resp.inspect if @debug
             # Got something. Send DONE. This breaks you out of the blocking call
             @connection.idle_done
           end
