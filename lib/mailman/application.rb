@@ -77,7 +77,8 @@ module Mailman
       elsif config.imap
         options = { processor: @processor }.merge(config.imap)
         Mailman.logger.info "IMAP receiver enabled (#{options[:username]}@#{options[:server]})."
-        polling_loop Receiver::IMAP.new(options)
+        # polling_loop Receiver::IMAP.new(options)
+        idle_loop Receiver::IMAP.new(options)
 
       # POP3
       elsif config.pop3
@@ -161,6 +162,35 @@ module Mailman
         break unless polling?
 
         sleep config.poll_interval
+      end
+    end
+
+    def idle_loop(connection)
+      puts "\nwaiting new mails (IDLE loop)..."
+      connection.connect
+
+      loop do
+        begin
+          connection.idle
+          connection.get_messages
+
+        rescue SignalException => e
+          puts "Signal received"
+          connection.idle_done
+          connection.disconnect
+
+        rescue Net::IMAP::Error => e
+          puts "Net::IMAP::Error"
+
+          connection.connect
+          puts "reconnected to server"
+
+        rescue Exception => e
+          puts "Something went wrong: #{e}"
+
+          connection.connect
+          puts "reconnected to server"
+        end
       end
     end
   end

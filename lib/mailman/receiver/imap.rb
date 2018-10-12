@@ -86,6 +86,23 @@ module Mailman
       def started?
         !(!@connection.nil? && @connection.disconnected?)
       end
+
+      def idle
+        @connection.idle do |resp|
+
+          # You'll get all the things from the server. For new emails (EXISTS)
+          if resp.kind_of?(Net::IMAP::UntaggedResponse) and resp.name == "EXISTS"
+
+            puts resp.inspect if @debug
+            # Got something. Send DONE. This breaks you out of the blocking call
+            @connection.idle_done
+          end
+        end
+      end
+
+      def idle_done
+        @connection.idle_done
+      end
     end
   end
 end
