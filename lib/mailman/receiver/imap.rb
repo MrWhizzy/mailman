@@ -88,7 +88,7 @@ module Mailman
       end
 
       def idle
-        @connection.idle do |resp|
+        @connection.idle(60) do |resp|
 
           # You'll get all the things from the server. For new emails (EXISTS)
           if resp.kind_of?(Net::IMAP::UntaggedResponse) and resp.name == "EXISTS"

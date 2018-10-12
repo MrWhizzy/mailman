@@ -166,7 +166,7 @@ module Mailman
     end
 
     def idle_loop(connection)
-      puts "\nwaiting new mails (IDLE loop)..."
+      puts "\nAwaiting new mail (IDLE loop)..."
       connection.connect
 
       loop do
