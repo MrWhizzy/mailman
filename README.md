@@ -3,6 +3,8 @@
 Mailman is an incoming mail processing microframework (with POP3 and Maildir
 support), that works with Rails "out of the box".
 
+This fork of mailman supports [IMAP IDLE](https://en.wikipedia.org/wiki/IMAP_IDLE), for retrieving emails instantly when they arrive in real-time.
+
 ```ruby
 require 'mailman'
 Mailman::Application.run do
@@ -22,14 +24,7 @@ See the [User Guide](https://github.com/MrWhizzy/mailman/blob/master/USER_GUIDE.
 
 ## Compatibility
 
-Tested on Ruby 2.1, 2.0, 1.9.3, JRuby, and Rubinius.
-
-### Ruby < 2.0.0
-
-In order to use this gem with ruby versions older then 2.0.0, you have to
-restrict the maildir gem to the latest supported version in your `Gemfile`:
-
-    gem 'maildir', '< 2.1.0'
+Tested on Ruby 2.5.1.
 
 ## Thanks
 
