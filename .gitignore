@@ -21,6 +21,7 @@ pkg
 *.rbc
 .bundle
 Gemfile.lock
+.tags
 
 ## PROJECT::SPECIFIC
 spec/test-maildir
